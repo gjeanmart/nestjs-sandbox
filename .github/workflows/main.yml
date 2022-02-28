@@ -32,28 +32,9 @@ jobs:
 
       - name: Set target environment variables
         run: |
-          if [[ '${{ github.event_name }}' == 'workflow_dispatch' ]]; then
-            if [[ '${{ github.event.inputs.target }}' == 'production' ]]; then
-              echo 'TARGET_ENV=production' >> $GITHUB_ENV
-              echo 'GCP_PROJECT_ID=maquineta-yeah' >> $GITHUB_ENV
-              echo 'GCP_SA_KEY=${{ secrets.GCP_SA_KEY_PRODUCTION }}' >> $GITHUB_ENV
-            
-            elif [[ '${{ github.event.inputs.target }}' == 'demo' ]]; then
-              echo 'TARGET_ENV=demo' >> $GITHUB_ENV
-              echo 'GCP_PROJECT_ID=maquineta-demo' >> $GITHUB_ENV
-              echo 'GCP_SA_KEY=${{ secrets.GCP_SA_KEY_DEMO }}' >> $GITHUB_ENV
-            
-            else
-              echo 'TARGET_ENV=staging' >> $GITHUB_ENV
-              echo 'GCP_PROJECT_ID=maquineta-staging' >> $GITHUB_ENV
-              echo 'GCP_SA_KEY=${{ secrets.GCP_SA_KEY_STAGING }}' >> $GITHUB_ENV
-            fi
-          
-          else
-            echo 'TARGET_ENV=staging' >> $GITHUB_ENV
-            echo 'GCP_PROJECT_ID=maquineta-staging' >> $GITHUB_ENV
-            echo 'GCP_SA_KEY=${{ secrets.GCP_SA_KEY_STAGING }}' >> $GITHUB_ENV
-          fi
+          echo 'TARGET_ENV=staging' >> $GITHUB_ENV
+          echo 'GCP_PROJECT_ID=maquineta-staging' >> $GITHUB_ENV
+          echo 'GCP_SA_KEY=${{ secrets.GCP_SA_KEY_STAGING }}' >> $GITHUB_ENV
 
       - name: Checkout repository
         uses: actions/checkout@master

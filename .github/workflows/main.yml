@@ -31,7 +31,6 @@ jobs:
 
     steps:
       - name: Set target environment variables
-        env:
         run: |
           echo 'TARGET_ENV=staging' >> $GITHUB_ENV
           echo 'GCP_PROJECT_ID=maquineta-staging' >> $GITHUB_ENV

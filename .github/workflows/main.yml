@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "main" ]
     # paths:
     #   - ".github/workflows/api.yml"
     #   - "build/api/**"
@@ -22,7 +22,6 @@ on:
         - staging
         - demo
         required: true
-
 
 jobs:
   test:
@@ -54,8 +53,8 @@ jobs:
           
           else
             echo 'TARGET_ENV=staging' >> $GITHUB_ENV
-              echo 'GCP_PROJECT_ID=maquineta-staging' >> $GITHUB_ENV
-              echo 'GCP_SA_KEY=${{ secrets.GCP_SA_KEY_STAGING }}' >> $GITHUB_ENV
+            echo 'GCP_PROJECT_ID=maquineta-staging' >> $GITHUB_ENV
+            echo 'GCP_SA_KEY=${{ secrets.GCP_SA_KEY_STAGING }}' >> $GITHUB_ENV
           fi
 
       - name: Checkout repository

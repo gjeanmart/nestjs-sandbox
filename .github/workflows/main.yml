@@ -28,7 +28,7 @@ jobs:
     strategy:
       matrix:
         node-version: [14.x]
-    
+
     steps:
       - name: Set target environment variables
         env:

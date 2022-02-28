@@ -11,8 +11,6 @@ async function bootstrap() {
   const NODE_ENV = configService.get<string>('NODE_ENV');
 
   await app.listen(PORT);
-  logger.log(
-    `${NODE_ENV}, Sandbox ready on PORT - ${PORT}\n Environment`,
-  );
+  logger.log( `nestjs-sandbox ready on PORT ${PORT} - Environment ${NODE_ENV}`)
 }
 bootstrap();

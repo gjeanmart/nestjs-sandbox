@@ -24,4 +24,5 @@ docker/run:
 cloud/deploy:
 	gcloud run deploy ${GCP_SERVICE_NAME} \
 		--image ${GCP_IMAGE_NAME} \
-		--region ${GCP_REGION}
+		--region ${GCP_REGION} \
+        --allow-unauthenticated 

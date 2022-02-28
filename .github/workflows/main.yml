@@ -1,0 +1,110 @@
+name: CI
+
+on:
+  push:
+    branches: [ "master" ]
+    # paths:
+    #   - ".github/workflows/api.yml"
+    #   - "build/api/**"
+    #   - "src/common/**"
+    #   - "src/api/**"
+    #   - "test/**"
+  workflow_dispatch:
+    inputs:
+      deploy_ref:
+        description: "Git reference (commit hash or branch name) to deploy"
+        required: true
+      target:
+        type: choice
+        description: "Target environment"
+        options:
+        - production
+        - staging
+        - demo
+        required: true
+
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x]
+    
+    steps:
+
+      - name: Set target environment variables
+        run: |
+          if [[ '${{ github.event_name }}' == 'workflow_dispatch' ]]; then
+            if [[ '${{ github.event.inputs.target }}' == 'production' ]]; then
+              echo 'TARGET_ENV=production' >> $GITHUB_ENV
+              echo 'GCP_PROJECT_ID=maquineta-yeah' >> $GITHUB_ENV
+              echo 'GCP_SA_KEY=${{ secrets.GCP_SA_KEY_PRODUCTION }}' >> $GITHUB_ENV
+            
+            elif [[ '${{ github.event.inputs.target }}' == 'demo' ]]; then
+              echo 'TARGET_ENV=demo' >> $GITHUB_ENV
+              echo 'GCP_PROJECT_ID=maquineta-demo' >> $GITHUB_ENV
+              echo 'GCP_SA_KEY=${{ secrets.GCP_SA_KEY_DEMO }}' >> $GITHUB_ENV
+            
+            else
+              echo 'TARGET_ENV=staging' >> $GITHUB_ENV
+              echo 'GCP_PROJECT_ID=maquineta-staging' >> $GITHUB_ENV
+              echo 'GCP_SA_KEY=${{ secrets.GCP_SA_KEY_STAGING }}' >> $GITHUB_ENV
+            fi
+          
+          else
+            echo 'TARGET_ENV=staging' >> $GITHUB_ENV
+              echo 'GCP_PROJECT_ID=maquineta-staging' >> $GITHUB_ENV
+              echo 'GCP_SA_KEY=${{ secrets.GCP_SA_KEY_STAGING }}' >> $GITHUB_ENV
+          fi
+
+      - name: Checkout repository
+        uses: actions/checkout@master
+        with:
+          # Defaults to the reference of the GitHub event that triggered the
+          # workflow.
+          ref: "${{ github.event.inputs.deploy_ref }}"
+      
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install npm dependencies
+        run: npm ci
+      
+      - name: Lint code
+        run: npm run lint
+      
+      - name: Run tests
+        run: npm run test
+
+      - name: Build image
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: make docker/build
+
+      - name: GCloud authentication
+        if: github.ref == 'refs/heads/main'
+        id: auth
+        uses: google-github-actions/auth@v0
+        with:
+          credentials_json: ${{ env.GCP_SA_KEY }}
+
+      - name: Set up GCloud SDK
+        if: github.ref == 'refs/heads/main'
+        uses: google-github-actions/setup-gcloud@v0
+
+      - name: Authorize Docker push to GCloud's images registry
+        if: github.ref == 'refs/heads/main'
+        run: gcloud auth configure-docker gcr.io
+
+      - name: Push image to registry
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: make docker/push
+
+      - name: Deploy image to Cloud Run
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: make cloud/deploy

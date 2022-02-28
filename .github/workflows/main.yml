@@ -22,14 +22,14 @@ on:
         required: true
 
 jobs:
-  test:
+  deploy:
+    name: Deploy
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [14.x]
     
     steps:
-
       - name: Set target environment variables
         run: |
           echo 'TARGET_ENV=staging' >> $GITHUB_ENV

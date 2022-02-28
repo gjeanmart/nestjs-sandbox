@@ -31,11 +31,15 @@ jobs:
 
     steps:
       - name: Set target environment variables
+        env:
+          GCP_SA_KEY_PRODUCTION: ${{ secrets.GCP_SA_KEY_PRODUCTION }}
+          GCP_SA_KEY_DEMO: ${{ secrets.GCP_SA_KEY_DEMO }}
+          GCP_SA_KEY_STAGING: ${{ secrets.GCP_SA_KEY_STAGING }}
         run: |
           echo 'TARGET_ENV=staging' >> $GITHUB_ENV
           echo 'GCP_PROJECT_ID=maquineta-staging' >> $GITHUB_ENV
           echo 'GCP_SA_KEY<<EOF' >> $GITHUB_ENV
-          echo ${{ secrets.GCP_SA_KEY_STAGING }} >> $GITHUB_ENV
+          echo $GCP_SA_KEY_STAGING >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
 
       - name: Checkout repository

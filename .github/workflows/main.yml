@@ -3,12 +3,10 @@ name: CI
 on:
   push:
     branches: [ "main" ]
-    # paths:
-    #   - ".github/workflows/api.yml"
-    #   - "build/api/**"
-    #   - "src/common/**"
-    #   - "src/api/**"
-    #   - "test/**"
+    paths:
+      - ".github/workflows/main.yml"
+      - "src/**"
+      - "test/**"
   workflow_dispatch:
     inputs:
       deploy_ref:

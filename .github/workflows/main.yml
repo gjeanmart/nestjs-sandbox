@@ -1,4 +1,4 @@
-name: CI
+name: nextjs-sandbox-ci
 
 on:
   push:
@@ -23,7 +23,7 @@ on:
 
 jobs:
   deploy:
-    name: Deploy
+    name: nextjs-sandbox-ci-deploy
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -32,9 +32,9 @@ jobs:
     steps:
       - name: Set target environment variables
         run: |
-          echo 'TARGET_ENV=staging' >> $GITHUB_ENV
-          echo 'GCP_PROJECT_ID=maquineta-staging' >> $GITHUB_ENV
-          echo 'GCP_SA_KEY=${{ secrets.GCP_SA_KEY_STAGING }}' >> $GITHUB_ENV
+          echo 'TARGET_ENV staging' >> $GITHUB_ENV
+          echo 'GCP_PROJECT_ID maquineta-staging' >> $GITHUB_ENV
+          echo 'GCP_SA_KEY ${{ secrets.GCP_SA_KEY_STAGING }}' >> $GITHUB_ENV
 
       - name: Checkout repository
         uses: actions/checkout@master

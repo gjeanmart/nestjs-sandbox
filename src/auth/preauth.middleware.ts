@@ -29,7 +29,7 @@ export class PreauthMiddleware implements NestMiddleware {
             next();
         })
         .catch(error => {
-            this.logger.error(`Error while authenticating a user on ${req.url}: ${error}`)
+            this.logger.log(`Error while authenticating a user on ${req.url}: ${error}`)
             this.accessDenied(req.url, res);
         });
     } else {

@@ -9,17 +9,16 @@ import * as firebase from 'firebase-admin';
 @Injectable()
 export class FirebaseAuthStrategy extends PassportStrategy(Strategy, 'firebase-auth') {
   private readonly logger = new Logger(FirebaseAuthStrategy.name);
-  private auth: firebase.auth.Auth;
-  
-  constructor(private firebaseApp: FirebaseApp) {
+
+  constructor(private readonly firebaseApp: FirebaseApp) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    });    
-    this.auth = firebaseApp.getAuth();
+    });
   }
 
   async validate(token: string) {
-    const firebaseUser: any = await this.auth
+    const firebaseUser: any = await this.firebaseApp
+      .getAuth()
       .verifyIdToken(token, true)
       .catch((err) => {
         this.logger.log(`Error while authenticating user: ${err}`)

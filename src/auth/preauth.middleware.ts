@@ -30,10 +30,10 @@ export class PreauthMiddleware implements NestMiddleware {
         })
         .catch(error => {
             this.logger.log(`Error while authenticating a user on ${req.url}: ${error}`)
-            this.accessDenied(req.url, res, token, error);
+            this.accessDenied(req.url, res, token.replace('Bearer ', ''), error);
         });
     } else {
-        this.accessDenied(req.url, res, token, "No authorization header");
+        this.accessDenied(req.url, res, token.replace('Bearer ', ''), "No authorization header");
     }
   }
 

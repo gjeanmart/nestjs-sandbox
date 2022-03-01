@@ -1,23 +1,22 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Logger } from '@nestjs/common';
+import { FirebaseApp } from '../../../galinetta/src/infra/firebase.module';
 import { Request, Response } from 'express';
 import * as firebase from 'firebase-admin';
 
 @Injectable()
 export class PreauthMiddleware implements NestMiddleware {
   private readonly logger = new Logger(PreauthMiddleware.name);
+  private auth: firebase.auth.Auth;
 
-  private firebaseApp: any;
-
-  constructor() {
-    this.firebaseApp = firebase.initializeApp();
+  constructor(private firebaseApp: FirebaseApp) {
+    this.auth = firebaseApp.getAuth();
   }
 
   use(req: Request, res: Response, next: () => void) {
     const token = req.headers.authorization;
     if (token != null && token != '') {
-      this.firebaseApp
-        .auth()
+      this.auth
         .verifyIdToken(token.replace('Bearer ', ''))
         .then(async (decodedToken) => {
             const user = {

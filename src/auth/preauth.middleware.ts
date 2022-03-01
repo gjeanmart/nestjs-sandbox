@@ -1,6 +1,6 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Logger } from '@nestjs/common';
-import { FirebaseApp } from '../../../galinetta/src/infra/firebase.module';
+import { FirebaseApp } from '../infra/firebase.module';
 import { Request, Response } from 'express';
 import * as firebase from 'firebase-admin';
 

@@ -3,7 +3,7 @@ import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/c
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { FirebaseApp } from '../../galinetta/src/infra/firebase.module';
+import { FirebaseApp } from './infra/firebase.module';
 import { PreauthMiddleware } from './auth/preauth.middleware';
 
 @Module({

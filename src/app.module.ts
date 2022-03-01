@@ -1,4 +1,9 @@
-import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
@@ -13,8 +18,8 @@ import { PreauthMiddleware } from './auth/preauth.middleware';
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(PreauthMiddleware).forRoutes({
-      path: '*', method: RequestMethod.ALL
+      path: '*',
+      method: RequestMethod.ALL,
     });
   }
 }
-

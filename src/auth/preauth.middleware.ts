@@ -30,22 +30,20 @@ export class PreauthMiddleware implements NestMiddleware {
         })
         .catch(error => {
             this.logger.log(`Error while authenticating a user on ${req.url}: ${error}`)
-            this.accessDenied(req.url, res, token.replace('Bearer ', ''), error);
+            this.accessDenied(req.url, res);
         });
     } else {
-        this.accessDenied(req.url, res, token.replace('Bearer ', ''), "No authorization header");
+        this.accessDenied(req.url, res);
     }
   }
 
-  private accessDenied(url: string, res: Response, error: String, token: String) {
+  private accessDenied(url: string, res: Response) {
     this.logger.log(`Access denied to ${url}`);
     res.status(403).json({
       statusCode: 403,
       timestamp: new Date().toISOString(),
       path: url,
-      message: 'Access Denied',
-      token: token,
-      details: error
+      message: 'Access Denied'
     });
   }
 }
